@@ -122,3 +122,18 @@ double det(const Matrix& rhs){
         exit(EXIT_FAILURE);
     }
 }
+
+Eye::Eye(int size) {
+    Rows = size;
+    Cols = size;
+    mat = std::vector<double>(size * size);
+    for (int i = 0; i < size * size; i += (size + 1)){
+        mat[i] = 1;
+    }
+}
+
+Eye::~Eye() {}
+
+Eye Eye::inverse(){
+    return *this;
+}

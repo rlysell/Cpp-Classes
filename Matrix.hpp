@@ -3,7 +3,7 @@
 #include <vector>
 class Matrix  
 {
-	private:
+	protected:
 		int Rows, Cols;
 		std::vector <double> mat;
 	public:
@@ -23,4 +23,11 @@ class Matrix
 		friend Matrix operator-(const Matrix& rhs);
 		friend double det(const Matrix& rhs);
 
+};
+
+class Eye : public Matrix{
+	public:
+		Eye(int size);
+		~Eye();
+		Eye inverse();
 };
