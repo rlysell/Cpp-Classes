@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <cmath>
+
 class Matrix  
 {
 	protected:
@@ -15,7 +17,9 @@ class Matrix
 		Matrix operator-(const Matrix& rhs) const;
 		Matrix operator*(const Matrix& rhs) const;
 		Matrix operator*(const double& rhs) const;
+		Matrix Hadamard(const Matrix& rhs) const;
 		Matrix transpose() const;
+		Matrix& reshape(int, int);
 		Matrix inverse() const;
 		void printMatrix() const; 
 		const double operator()(const int, const int) const;

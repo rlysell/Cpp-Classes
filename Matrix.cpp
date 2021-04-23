@@ -33,9 +33,9 @@ Matrix Matrix::operator+(const Matrix& rhs) const{
     }
     
     Matrix sol(Rows, Cols, std::vector<double>(Rows * Cols));
-    for ( int j = 0; j < Cols; j++ ) {
-        for ( int i = 0; i < Rows; i++ ) {
-            sol.mat[i + j * Rows] = mat[i + j * Rows] + rhs.mat[i + j * Rows];
+    for ( int j = 0; j < Rows; j++ ) {
+        for ( int i = 0; i < Cols; i++ ) {
+            sol.mat[i + j * Cols] = mat[i + j * Cols] + rhs.mat[i + j * Cols];
         }
     }
     return sol;
@@ -56,16 +56,30 @@ Matrix Matrix::operator*(const Matrix& rhs) const{
     for (int j = 0; j < Cols; j++){
 
     }
-    for (int k = 0; k < size; k++){
-        sum = 0;
-        for (int j = 0; j < Cols; j ++){
-            for (int i = 0; i < Rows; i++){
-                sum += mat [i + j * Rows] * rhs.mat [i + j * Rows];
+    for (int j = 0; j < Rows; j ++){
+        for (int k = 0; k < rhs.Cols; k++){
+            sum = 0;
+            for ( int i = 0; i < Cols; i++ ){
+                sum += mat [i + j * Cols] * rhs.mat [k + i * rhs.Cols];
             }
+            sol.mat [k + j * rhs.Cols] = sum;
         }
-        sol.mat[k] = sum;
+       
     }
+   
     return sol;
+}
+
+Matrix Matrix::Hadamard(const Matrix& rhs) const{
+    if (mat.size() != rhs.mat.size()) {
+        std::cerr << "DIMENSION ERROR\n";
+        exit (EXIT_FAILURE);
+    }
+    std::vector <double> new_mat = std::vector <double>(mat.size());
+    for (int i = 0; i < mat.size(); i++){
+        new_mat[i] = mat[i] * rhs.mat[i];
+    }
+    return Matrix(Rows, Cols, new_mat);
 }
 
 Matrix Matrix::operator*(const double& rhs) const {
@@ -88,6 +102,15 @@ Matrix Matrix::transpose() const {
         }
     }
     return Matrix(Cols, Rows, new_mat);
+}
+
+Matrix& Matrix::reshape(int new_Rows, int new_Cols){
+    if (!(new_Rows * new_Cols == Rows*Cols)){
+        std::cerr << "Dimension erroe!\n";
+        exit(EXIT_FAILURE);
+    }
+    Rows = new_Rows; Cols = new_Cols;
+    return *this;
 }
 
 void Matrix::printMatrix() const {
@@ -121,6 +144,22 @@ double det(const Matrix& rhs){
         std::cerr << "Can't calculate Determinant of non-square matrix\n";
         exit(EXIT_FAILURE);
     }
+    if (rhs.Rows == 2 && rhs.Cols == 2) {
+        return rhs(0, 0)*rhs(1, 1) - rhs(0, 1)*rhs(1, 0);
+    }
+    double det_sum = 0;
+    for (int k = 0; k < rhs.Cols; k++) {
+        std::vector <double> new_mat ({});
+        for ( int j = 1; j < rhs.Rows; j++ ) {
+            for ( int i = 0; i < rhs.Cols; i++ ) {
+                if (i == k ) continue;
+                new_mat.push_back (rhs.mat [i + j * rhs.Cols]);
+            }
+        }
+        Matrix submatrix (rhs.Rows - 1, rhs.Cols - 1, new_mat);
+        det_sum += pow(-1, k) * rhs.mat[k] * det(submatrix);
+    }
+    return det_sum;
 }
 
 Eye::Eye(int size) {
