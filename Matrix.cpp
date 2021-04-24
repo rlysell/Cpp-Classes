@@ -206,6 +206,18 @@ Matrix solve(const Matrix& A, const Matrix& b){
     return A.inverse() * b;
 }
 
+double trace(const Matrix& A){
+    if (!(A.Rows == A.Cols)){
+        std::cerr << "Dimension error!\n";
+        exit(EXIT_FAILURE);
+    }
+    double tr = 0;
+    for (int i = 0; i < A.Rows; i++){
+        tr += A.mat[i + i * A.Cols];
+    }
+    return tr;
+}
+
 Eye::Eye(int size) {
     Rows = size;
     Cols = size;

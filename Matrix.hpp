@@ -29,6 +29,7 @@ class Matrix
 		friend double det(const Matrix& rhs);
 		friend Matrix adj(const Matrix& rhs);
 		friend Matrix solve(const Matrix& A, const Matrix& b);
+		friend double trace(const Matrix& A);
 };
 
 class Eye : public Matrix{
