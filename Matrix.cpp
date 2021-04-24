@@ -182,7 +182,6 @@ double det(const Matrix& rhs){
         //Matrix submatrix (rhs.Rows - 1, rhs.Cols - 1, new_mat);
         */
         Matrix sub_mat = rhs.submatrix(0, k);
-        sub_mat.printMatrix();
         det_sum += pow(-1, k) * rhs.mat[k] * det(sub_mat);
     }
     return det_sum;
@@ -201,6 +200,10 @@ Matrix adj(const Matrix& rhs){
 
     }
     return Matrix(rhs.Rows, rhs.Cols, new_mat);
+}
+
+Matrix solve(const Matrix& A, const Matrix& b){
+    return A.inverse() * b;
 }
 
 Eye::Eye(int size) {

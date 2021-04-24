@@ -28,6 +28,7 @@ class Matrix
 		friend Matrix operator-(const Matrix& rhs);
 		friend double det(const Matrix& rhs);
 		friend Matrix adj(const Matrix& rhs);
+		friend Matrix solve(const Matrix& A, const Matrix& b);
 };
 
 class Eye : public Matrix{
