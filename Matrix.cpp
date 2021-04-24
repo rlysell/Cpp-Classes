@@ -113,6 +113,17 @@ Matrix& Matrix::reshape(int new_Rows, int new_Cols){
     return *this;
 }
 
+Matrix Matrix::submatrix(int row, int col) const {
+    std::vector <double> new_mat ({});
+    for ( int j = 0; j < Rows; j++ ){
+        for ( int i = 0; i < Cols; i++ ){
+            if ( i == col || j == row ) continue;
+            new_mat.push_back (mat [i + j * Cols]);
+        }
+    }
+    return Matrix(Rows - 1, Cols - 1, new_mat);
+}
+
 void Matrix::printMatrix() const {
     for (int j = 0; j < Rows; j++){
         for (int i = 0; i < Cols; i++){
@@ -144,22 +155,44 @@ double det(const Matrix& rhs){
         std::cerr << "Can't calculate Determinant of non-square matrix\n";
         exit(EXIT_FAILURE);
     }
+    if (rhs.Rows == 1 && rhs.Cols == 1)
+        return rhs(0,0);
     if (rhs.Rows == 2 && rhs.Cols == 2) {
         return rhs(0, 0)*rhs(1, 1) - rhs(0, 1)*rhs(1, 0);
     }
     double det_sum = 0;
+    
     for (int k = 0; k < rhs.Cols; k++) {
         std::vector <double> new_mat ({});
+        /*
         for ( int j = 1; j < rhs.Rows; j++ ) {
             for ( int i = 0; i < rhs.Cols; i++ ) {
                 if (i == k ) continue;
                 new_mat.push_back (rhs.mat [i + j * rhs.Cols]);
             }
         }
-        Matrix submatrix (rhs.Rows - 1, rhs.Cols - 1, new_mat);
-        det_sum += pow(-1, k) * rhs.mat[k] * det(submatrix);
+        //Matrix submatrix (rhs.Rows - 1, rhs.Cols - 1, new_mat);
+        */
+        Matrix sub_mat = rhs.submatrix(0, k);
+        sub_mat.printMatrix();
+        det_sum += pow(-1, k) * rhs.mat[k] * det(sub_mat);
     }
     return det_sum;
+}
+
+Matrix adj(const Matrix& rhs){
+    if(!(rhs.Rows == rhs.Cols)){
+        std::cerr << "Dimension error!\n";
+        exit(EXIT_FAILURE);
+    }
+    std::vector <double> new_mat({});
+    for (int j = 0; j < rhs.Rows; j ++){
+        for (int i = 0; i < rhs.Cols; i++){
+            new_mat.push_back (pow(-1, (i + j)) * det(rhs.submatrix(i, j)));
+        }
+
+    }
+    return Matrix(rhs.Rows, rhs.Cols, new_mat);
 }
 
 Eye::Eye(int size) {

@@ -21,12 +21,13 @@ class Matrix
 		Matrix transpose() const;
 		Matrix& reshape(int, int);
 		Matrix inverse() const;
+		Matrix submatrix(int, int) const;
 		void printMatrix() const; 
 		const double operator()(const int, const int) const;
 		double& operator()(const int, const int);
 		friend Matrix operator-(const Matrix& rhs);
 		friend double det(const Matrix& rhs);
-
+		friend Matrix adj(const Matrix& rhs);
 };
 
 class Eye : public Matrix{
