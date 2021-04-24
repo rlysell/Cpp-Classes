@@ -113,6 +113,14 @@ Matrix& Matrix::reshape(int new_Rows, int new_Cols){
     return *this;
 }
 
+Matrix Matrix::inverse() const{
+    if(!(Rows == Cols)){
+        std::cerr << "Dimensin error\n";
+        exit(EXIT_FAILURE);
+    }
+    return adj(*this) * (1.0 / det(*this));
+}
+
 Matrix Matrix::submatrix(int row, int col) const {
     std::vector <double> new_mat ({});
     for ( int j = 0; j < Rows; j++ ){
